@@ -1,41 +1,47 @@
-pipeline {
-  agent any
-  stages {
-    stage('Build') {
-      steps {
-        echo 'Build stage'
-      }
+pipeline{
+    agent  any
+    tools {
+        maven 'Maven'
     }
-
-    stage('Test') {
-      parallel {
-        stage('Test') {
-          steps {
-            echo 'Test step'
-          }
+    stages{
+        stage("Test"){
+            steps{
+                // mvn test
+                sh "mvn test"
+                echo "========executing A========"
+            }
         }
-
-        stage('t1') {
-          steps {
-            echo 't-step1'
-          }
+        stage("Build"){
+            steps{
+                // mvn package
+                sh "mvn package"
+                echo "========executing A========"
+            }
         }
-
-        stage('t3') {
-          steps {
-            echo 't-stage2'
-          }
+        stage("UAT"){
+            steps{
+                // deplo containter plugin
+                deploy adapters: [tomcat9(credentialsId: 'tomcat1Details', path: '', url: 'http://192.168.0.102:8080/')], contextPath: '/app', war: '**/*'
+                echo "========executing A========"
+            }
         }
-
-      }
+        stage("Prod"){
+            steps{
+                // deplo containter plugin
+                deploy adapters: [tomcat9(credentialsId: 'tomcat1Details', path: '', url: 'http://192.168.0.103:8080/')], contextPath: '/app', war: '**/*'
+                echo "========executing A========"
+            }
+        }
     }
-
-    stage('Deploy') {
-      steps {
-        echo 'Prod-deploy'
-        sleep 10
-      }
+    post{
+        always{
+            echo "========always========"
+        }
+        success{
+            echo "========pipeline executed successfully ========"
+        }
+        failure{
+            echo "========pipeline execution failed========"
+        }
     }
-
-  }
 }
