@@ -25,13 +25,6 @@ pipeline{
                 echo "========executing A========"
             }
         }
-        stage("Prod"){
-            steps{
-                // deplo containter plugin
-                deploy adapters: [tomcat9(credentialsId: 'tomcat1Details', path: '', url: 'http://192.168.0.103:8080/')], contextPath: '/app', war: '**/*'
-                echo "========executing A========"
-            }
-        }
     }
     post{
         always{
