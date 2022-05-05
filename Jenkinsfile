@@ -21,7 +21,7 @@ pipeline{
         stage("UAT"){
             steps{
                 // deplo containter plugin
-                deploy adapters: [tomcat9(credentialsId: 'tomcat1Details', path: '', url: 'http://192.168.0.102:8080/')], contextPath: '/app', war: '**/*.war'
+                deploy adapters: [tomcat9(credentialsId: 'tomcat1Details', path: '', url: 'http://192.168.0.103:8080/')], contextPath: '/app', war: '**/*.war'
                 echo "========executing A========"
             }
         }
